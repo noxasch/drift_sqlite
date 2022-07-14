@@ -8,7 +8,13 @@ final tasksProvider = StreamProvider.autoDispose<List<Task>>((ref) {
   return ref.watch(taskRepoProvider).watchAllTasks;
 });
 
-final taskRepoProvider = Provider((ref) => TaskRepository(AppDatabase()));
+final taskRepoProvider = Provider((ref) {
+  final db = AppDatabase();
+  ref.onDispose(() {
+    db.close();
+  });
+  return TaskRepository(db);
+});
 
 @DriftAccessor(tables: [Tasks])
 class TaskRepository extends DatabaseAccessor<AppDatabase>
@@ -19,7 +25,7 @@ class TaskRepository extends DatabaseAccessor<AppDatabase>
 
   Stream<List<Task>> get watchAllTasks => select(tasks).watch();
 
-  Future<Task> getById(int id) =>
+  Future<Task> getTaskById(int id) =>
       (select(tasks)..where((t) => t.id.equals(id))).getSingle();
 
   Future<int> addTask(TasksCompanion task) => into(tasks).insert(task);
