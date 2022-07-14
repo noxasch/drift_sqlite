@@ -1,5 +1,5 @@
 import 'package:drift/drift.dart';
-import 'package:drift_sqlite/src/db/app_database.dart';
+import 'package:drift_sqlite/src/database/app_database.dart';
 import 'package:drift_sqlite/src/repositories/task_repository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
