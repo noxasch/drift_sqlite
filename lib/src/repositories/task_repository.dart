@@ -25,8 +25,8 @@ class TaskRepository extends DatabaseAccessor<AppDatabase>
 
   Stream<List<Task>> get watchAllTasks => select(tasks).watch();
 
-  Future<Task> getTaskById(int id) =>
-      (select(tasks)..where((t) => t.id.equals(id))).getSingle();
+  Future<Task?> getTaskById(int id) =>
+      (select(tasks)..where((t) => t.id.equals(id))).getSingleOrNull();
 
   Future<int> addTask(TasksCompanion task) => into(tasks).insert(task);
 
