@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
+import 'package:drift_sqlite/src/repositories/task_repository.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
@@ -9,6 +10,8 @@ import 'package:path_provider/path_provider.dart';
 // if we are using drift only this is the only model we need
 // should be named as test.dart and task.g.dart
 // will not be generated as we are using freezed instead
+// we meed to implement custom function to support
+// drift getter if we are using freezed or other data class generator
 part 'app_database.g.dart';
 
 class Tasks extends Table {
@@ -20,7 +23,8 @@ class Tasks extends Table {
   BoolColumn get completed => boolean().withDefault(const Constant(false))();
 }
 
-@DriftDatabase(tables: [Tasks])
+// list of DAOs are optional
+@DriftDatabase(tables: [Tasks], daos: [TaskRepository])
 class AppDatabase extends _$AppDatabase {
   // we tell the database where to store the data with this constructor
   AppDatabase() : super(_openConnection());

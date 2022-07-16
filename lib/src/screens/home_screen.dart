@@ -4,12 +4,17 @@ import 'package:drift_sqlite/src/screens/widgets/task_input.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+enum HomeMode { all, completed }
+
+final homeModeProvider = StateProvider<HomeMode>((_) => HomeMode.all);
+
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final tasks = ref.watch(tasksProvider);
+    final viewMode = ref.watch(homeModeProvider);
+    final tasks = ref.watch(tasksProviderFamily(viewMode));
 
     ref.listen<Exception?>(taskErrorProvider,
         (Exception? prevException, Exception? currentException) {
@@ -22,9 +27,27 @@ class HomeScreen extends ConsumerWidget {
           )));
     });
 
+    void toggleViewMode(bool? value) {
+      var newMode = HomeMode.all;
+      if (viewMode == HomeMode.all) {
+        newMode = HomeMode.completed;
+      }
+      ref.read(homeModeProvider.notifier).state = newMode;
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Tasks'),
+        actions: [
+          Row(
+            children: [
+              const Text('Show completed'),
+              Switch(
+                  value: viewMode == HomeMode.completed,
+                  onChanged: toggleViewMode),
+            ],
+          )
+        ],
       ),
       body: SafeArea(
           child: Column(

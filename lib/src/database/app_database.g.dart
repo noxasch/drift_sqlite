@@ -259,6 +259,8 @@ class $TasksTable extends Tasks with TableInfo<$TasksTable, Task> {
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(SqlTypeSystem.defaultInstance, e);
   late final $TasksTable tasks = $TasksTable(this);
+  late final TaskRepository taskRepository =
+      TaskRepository(this as AppDatabase);
   @override
   Iterable<TableInfo> get allTables => allSchemaEntities.whereType<TableInfo>();
   @override
