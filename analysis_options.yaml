@@ -19,6 +19,7 @@ linter:
     prefer_single_quotes: true
     eol_at_end_of_file: true
     directives_ordering: true
+    require_trailing_commas: true
 
 analyzer:
   exclude:

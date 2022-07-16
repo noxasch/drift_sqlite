@@ -14,13 +14,21 @@ class TasksController extends StateNotifier<AsyncValue<List<Task>>> {
 
   TasksController(this.read) : super(const AsyncLoading());
 
-  Future<void> addTask({required String name, DateTime? dueDate}) async {
+  Future<void> addTask({
+    required String name,
+    DateTime? dueDate,
+    int? tagId,
+  }) async {
     if (name.isEmpty) {
       read(taskErrorProvider.state).state =
           TaskException('Please enter task name');
     } else {
       try {
-        final task = TasksCompanion(name: Value(name), dueDate: Value(dueDate));
+        final task = TasksCompanion(
+          name: Value(name),
+          dueDate: Value(dueDate),
+          tagId: Value(tagId),
+        );
         await read(taskRepoProvider).addTask(task);
       } on InvalidDataException catch (error) {
         read(taskErrorProvider.state).state = TaskException(error.message);
